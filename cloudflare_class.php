@@ -54,7 +54,12 @@ class cloudflare_api
         ];
         return $this->delete('zones/'.$identifier.'/purge_cache',$data);
     }
-
+    /**
+    * dns_records
+    */
+    public function dns_records($identifier){
+        return $this->get('zones/'.$identifier.'/dns_records',[]);
+    }
     /**
     * purge_site
     */

@@ -9,9 +9,16 @@ php binding for cloudlfare api v4
 ### examples
 
 ```php
-//purge_site
 $api = new cloudflare_api('example@example.com','agdegbhj1d0fe343dff8fddcb30131');
 
+//get_zones
+$result = $api->get_zones();
+
+//dns_records
+$identifier = $api->identifier('example.com');
+$result = $api->dns_records($identifier);
+
+//purge_site
 $identifier = $api->identifier('example.com');
 $result = $api->purge_site($identifier);
 
