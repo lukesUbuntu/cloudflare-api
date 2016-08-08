@@ -26,23 +26,38 @@ class cloudflare_api
         }
         
     }
-    
+    /**
+    * purge_filidentifieres
+    */
+    public function identifier($domain){
+        $result = $this->get_zone($domain);
+        if (isset($result->result) && count($result->result) == 1)
+           return $result->result[0]->id;
+
+       return false;
+    }
     /**
     * purge_files
     */
-    public function purge_files($domain, $files){
+    public function purge_files($identifier, $files){
         $data = [
-        'files' => $files
+            'files' => $files
         ];
-        $this->delete('zones/'.$domain.'/purge_cache', $data);
+        $this->delete('zones/'.$identifier.'/purge_cache', $data);
     }
     /**
     * purge_site
     */
-    public function purge_site($domain){
-        $this->delete('zones/'.$domain.'/purge_cache');
+    public function purge_site($identifier){
+        $data = [
+            'purge_everything' =>  true
+        ];
+        return $this->delete('zones/'.$identifier.'/purge_cache',$data);
     }
 
+    /**
+    * purge_site
+    */
     public function get_zone($name){
         $data = [
             'name'      => $name,
@@ -52,12 +67,28 @@ class cloudflare_api
         ];
         return $this->get('zones',$data);
     }
+    /**
+    * purge_site
+    */
     public function get_zones(){
         return $this->get('zones',[]);
     }
+    //privates below
+    /**
+    * delete
+    */
     private function delete($endpoint,$data){
         return $this->http_request($endpoint,$data,'delete');
     }
+    /**
+    * post
+    */
+    private function post($endpoint,$data){
+        return $this->http_request($endpoint,$data,'post');
+    }
+    /**
+    * get
+    */
     private function get($endpoint,$data){
         return $this->http_request($endpoint,$data,'get');
     }
@@ -113,12 +144,11 @@ class cloudflare_api
         $error       = curl_error($ch);
         $http_code   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        //print_r($http_result);
+       
 
         if ($http_code != 200) {
-            return array(
-            'error' => $error
-            );
+            //hit error will add in error checking but for now will return back to user to handle
+            return json_decode($http_response);
         } else {
             return json_decode($http_response);
         }
