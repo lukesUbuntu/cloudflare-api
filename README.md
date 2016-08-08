@@ -18,6 +18,10 @@ $result = $api->get_zones();
 $identifier = $api->identifier('example.com');
 $result = $api->dns_records($identifier);
 
+//create_dns_record | eg A record for ftp.example.com to point to 127.0.0.1
+$identifier = $api->identifier('example.com');
+$result = $api->create_dns_record($identifier,'A','ftp','127.0.0.1');
+
 //purge_site
 $identifier = $api->identifier('example.com');
 $result = $api->purge_site($identifier);

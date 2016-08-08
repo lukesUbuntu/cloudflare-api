@@ -12,14 +12,18 @@ class cloudflare_api
     private $auth_email;
     private $auth_key;
     
+    //checking for create dns
+    private static $VALID_DNS_TYPES = array('A', 'AAAA', 'CNAME', 'TXT', 'SRV', 'LOC', 'MX', 'NS', 'SPF');
+
     
+   
     public function __construct()
     {
         
         $num_args = func_num_args();
         if ($num_args == 2){
             $parameters = func_get_args();
-            $this->auth_email     = $parameters[0];
+            $this->auth_email = $parameters[0];
             $this->auth_key = $parameters[1];
         }else{
             //throw error
@@ -59,6 +63,24 @@ class cloudflare_api
     */
     public function dns_records($identifier){
         return $this->get('zones/'.$identifier.'/dns_records',[]);
+    }
+    /**
+    * create_dns_record
+    * https://api.cloudflare.com/#dns-records-for-a-zone-create-dns-record
+    * @type : A, AAAA, CNAME, TXT, SRV, LOC, MX, NS, SPF
+    */
+    public function create_dns_record($identifier,$type,$name,$content,$ttl = 1){
+
+         if (!in_array($type, self::$VALID_DNS_TYPES))
+         return "incorrect dns type";
+
+        $data = [
+            'type'      =>  $type,
+            'name'      =>  $name,
+            'content'   =>  $content,
+            'ttl'       =>  $ttl
+        ];
+        return $this->post('zones/'.$identifier.'/dns_records',$data);
     }
     /**
     * purge_site
