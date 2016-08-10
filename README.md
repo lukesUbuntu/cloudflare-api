@@ -2,7 +2,7 @@
 ## cloudflare-api
 Just started this class not ready will add to examples for each completed method
 
-php binding for cloudlfare api v4
+php binding for cloudflare api v4
 
 
 
@@ -18,9 +18,14 @@ $result = $api->get_zones();
 $identifier = $api->identifier('example.com');
 $result = $api->dns_records($identifier);
 
+//get_dns_record
+$result = $api->get_dns_record($identifier,'A','example.com');
+
 //create_dns_record | eg A record for ftp.example.com to point to 127.0.0.1
 $identifier = $api->identifier('example.com');
 $result = $api->create_dns_record($identifier,'A','ftp','127.0.0.1');
+//update_dns_record
+//delete_dns_record
 
 //purge_site
 $identifier = $api->identifier('example.com');

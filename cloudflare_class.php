@@ -64,6 +64,53 @@ class cloudflare_api
     public function dns_records($identifier){
         return $this->get('zones/'.$identifier.'/dns_records',[]);
     }
+
+   
+    /**
+    * get_dns_record
+    * https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
+    */
+    public function get_dns_record($identifier,$type = '' ,$domain = ''){
+
+         if (!in_array($type, self::$VALID_DNS_TYPES))
+            return "incorrect dns type";
+
+        $data = [
+            'type'      =>  $type,
+            'name'      =>  $domain,
+            'per_page'  =>  20,
+            'order'     => 'type',
+            'match'     => 'all'
+        ];
+        return $this->get('zones/'.$identifier.'/dns_records',$data);
+    }
+    /**
+    * delete_dns_record
+    * https://api.cloudflare.com/#dns-records-for-a-zone-delete-dns-record
+    * @dns_record_id : DNS record ID
+    * @todo get dns id from list
+    */
+    public function delete_dns_record($identifier,$dns_record_id){
+        return $this->delete('zones/'.$identifier.'/dns_records/'.$dns_record_id,[]);
+    }
+     /**
+    * update_dns_record
+    * https://api.cloudflare.com/#dns-records-for-a-zone-update-dns-record
+    * @type : A, AAAA, CNAME, TXT, SRV, LOC, MX, NS, SPF
+    */
+    public function update_dns_record($identifier,$dns_record_id,$type,$name,$content,$ttl = 1){
+
+         if (!in_array($type, self::$VALID_DNS_TYPES))
+         return "incorrect dns type";
+
+        $data = [
+            'type'      =>  $type,
+            'name'      =>  $name,
+            'content'   =>  $content,
+            'ttl'       =>  $ttl
+        ];
+        return $this->put('zones/'.$identifier.'/dns_records',$data);
+    }
     /**
     * create_dns_record
     * https://api.cloudflare.com/#dns-records-for-a-zone-create-dns-record
@@ -160,7 +207,7 @@ class cloudflare_api
             $url .= '?'.http_build_query($data);
         else
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-        //echo $url;exit;
+        echo $url;
 
         //add headers
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
