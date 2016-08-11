@@ -21,11 +21,23 @@ $result = $api->dns_records($identifier);
 //get_dns_record
 $result = $api->get_dns_record($identifier,'A','example.com');
 
+
 //create_dns_record | eg A record for ftp.example.com to point to 127.0.0.1
 $identifier = $api->identifier('example.com');
 $result = $api->create_dns_record($identifier,'A','ftp','127.0.0.1');
+
+//get_dns_record_id
+$dns_record_id = $api->get_dns_record_id($identifier,'A','ftp.example.com');
+
 //update_dns_record
+$identifier = $api->identifier('example.com');
+$dns_record_id = $api->get_dns_record_id($identifier,'A','ftp.example.com');
+$response = $api->update_dns_record($identifier,$dns_record_id,'A','ftp','127.0.1.1');
+
 //delete_dns_record
+$identifier = $api->identifier('example.com');
+$dns_record_id = $api->get_dns_record_id($identifier,'A','ftp.example.com');
+$response = $api->delete_dns_record($identifier,$dns_record_id);
 
 //purge_site
 $identifier = $api->identifier('example.com');

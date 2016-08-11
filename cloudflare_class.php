@@ -31,7 +31,7 @@ class cloudflare_api
         
     }
     /**
-    * purge_filidentifieres
+    * identifier for domain
     */
     public function identifier($domain){
         $result = $this->get_zone($domain);
@@ -42,8 +42,9 @@ class cloudflare_api
     }
     /**
     * purge_files
+    * @files | array
     */
-    public function purge_files($identifier, $files){
+    public function purge_files($identifier, $files = []){
         $data = [
             'files' => $files
         ];
@@ -58,6 +59,7 @@ class cloudflare_api
         ];
         return $this->delete('zones/'.$identifier.'/purge_cache',$data);
     }
+
     /**
     * dns_records
     */
@@ -66,6 +68,17 @@ class cloudflare_api
     }
 
    
+    /**
+    * get_dns_record_id
+    * will return DNS id if only 1 record is found
+    */
+    public function get_dns_record_id($identifier,$type = '' ,$domain = ''){
+        $response = $this->get_dns_record($identifier,$type,$domain);
+        if ($response && count($response->result) == 1){
+            return  $response->result[0]->id;
+        }
+        return "failed to get dns id use get_dns_record";
+    }
     /**
     * get_dns_record
     * https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
@@ -88,9 +101,9 @@ class cloudflare_api
     * delete_dns_record
     * https://api.cloudflare.com/#dns-records-for-a-zone-delete-dns-record
     * @dns_record_id : DNS record ID
-    * @todo get dns id from list
     */
     public function delete_dns_record($identifier,$dns_record_id){
+        
         return $this->delete('zones/'.$identifier.'/dns_records/'.$dns_record_id,[]);
     }
      /**
@@ -109,7 +122,7 @@ class cloudflare_api
             'content'   =>  $content,
             'ttl'       =>  $ttl
         ];
-        return $this->put('zones/'.$identifier.'/dns_records',$data);
+        return $this->put('zones/'.$identifier.'/dns_records/'.$dns_record_id,$data);
     }
     /**
     * create_dns_record
@@ -167,6 +180,12 @@ class cloudflare_api
         return $this->http_request($endpoint,$data,'get');
     }
     /**
+    * put
+    */
+    private function put($endpoint,$data){
+        return $this->http_request($endpoint,$data,'put');
+    }
+    /**
     * Handle http request to cloudflare server
     */
     private function http_request($endpoint,$data, $method)
@@ -207,7 +226,7 @@ class cloudflare_api
             $url .= '?'.http_build_query($data);
         else
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-        echo $url;
+        //echo $url;
 
         //add headers
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
