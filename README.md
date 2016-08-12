@@ -11,6 +11,7 @@ php binding for cloudflare api v4
 ```php
 $api = new cloudflare_api('example@example.com','agdegbhj1d0fe343dff8fddcb30131');
 
+
 //get_zones
 $result = $api->get_zones();
 
@@ -50,4 +51,7 @@ $files = [
     'http://example.com/skin.js'
 ];
 $result = $api->purge_files($identifier,$files);
+
+//analytics
+$analytics = $api->analytics($identifier,-10080, 0);
 ```

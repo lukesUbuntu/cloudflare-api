@@ -40,15 +40,30 @@ class cloudflare_api
 
        return false;
     }
+     /**
+    * analytics
+    * @identifier
+    * https://api.cloudflare.com/#zone-analytics-dashboard
+    */
+    public function analytics($identifier, $since = -10080, $until = 0 , $continuous = true){
+        $continuous = ($continuous) ? "true" : "false";//need to pass as string
+        $data = [
+            'since'         => $since,
+            'until'         => $until,
+            'continuous'    => $continuous
+        ];
+        return $this->get('zones/'.$identifier.'/analytics/dashboard', $data);
+    }
     /**
     * purge_files
-    * @files | array
+    * @identifier
+    * @files | Array
     */
     public function purge_files($identifier, $files = []){
         $data = [
             'files' => $files
         ];
-        $this->delete('zones/'.$identifier.'/purge_cache', $data);
+        return $this->delete('zones/'.$identifier.'/purge_cache', $data);
     }
     /**
     * purge_site
