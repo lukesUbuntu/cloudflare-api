@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * User: Luke Hardiman
+ * Date: 06/08/2016
+ * Cloudflare Module for blesta
+ *
+ * @author Luke Hardiman, fb.com/lukes.servers
+ * @copyright Copyright (c) 2016, Luke Hardiman
+ * @license https://raw.githubusercontent.com/lukesUbuntu/cloudflare-api/master/license
+ * @link https://github.com/lukesUbuntu | https://fb.com/lukes.servers
+ */
 class cloudflare_api
 {
     
@@ -8,15 +17,15 @@ class cloudflare_api
     const TIMEOUT = 5;
     
     private $URL = 'https://api.cloudflare.com/client/v4/';
-    //Stores the email login
+    //Store Cloudflare email & auth
     private $auth_email;
     private $auth_key;
-    
-    //checking for create dns
+     
+    //checking for valid dns type
     private static $VALID_DNS_TYPES = array('A', 'AAAA', 'CNAME', 'TXT', 'SRV', 'LOC', 'MX', 'NS', 'SPF');
 
     
-   
+
     public function __construct()
     {
         
