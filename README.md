@@ -54,4 +54,14 @@ $result = $api->purge_files($identifier,$files);
 
 //analytics
 $analytics = $api->analytics($identifier,-10080, 0);
+
+/**
+* User Section
+*/
+//get_user_details 
+$user_details = $api->get_user_details();
+
+//update_user_details
+$response = $api->update_user_details("first_name","last_name","telephone","country","zipcode");
+
 ```

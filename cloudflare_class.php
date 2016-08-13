@@ -184,6 +184,34 @@ class cloudflare_api
     public function get_zones(){
         return $this->get('zones',[]);
     }
+
+    /**
+     * User Section
+     */
+
+
+    /**
+     * get_user_details
+     * https://api.cloudflare.com/#user-user-details
+     */
+    public function get_user_details(){
+        return $this->get('user',[]);
+    }
+    /**
+     * update_user_details
+     * https://api.cloudflare.com/#user-user-details
+     */
+    public function update_user_details($first_name,$last_name,$telephone,$country,$zipcode){
+        $data = [
+            "first_name" => $first_name,
+            "last_name"  => $last_name,
+            "telephone"  => $telephone,
+            "country"    => $country,
+            "zipcode"    => $zipcode
+        ];
+        return $this->patch('user',$data);
+    }
+
     //privates below
     /**
     * delete
@@ -208,6 +236,12 @@ class cloudflare_api
     */
     private function put($endpoint,$data){
         return $this->http_request($endpoint,$data,'put');
+    }
+    /**
+     * patch
+     */
+    private function patch($endpoint,$data){
+        return $this->http_request($endpoint,$data,'patch');
     }
     /**
     * Handle http request to cloudflare server
@@ -243,7 +277,9 @@ class cloudflare_api
         
         if ($method === 'delete')
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-        
+
+        if ($method === 'patch')
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
     
         //get request otherwise pass post data
         if (!isset($method) || $method == 'get')
