@@ -140,12 +140,32 @@ class cloudflare_api
          if (!in_array($type, self::$VALID_DNS_TYPES))
          return "incorrect dns type";
 
-        $data = [
-            'type'      =>  $type,
-            'name'      =>  $name,
-            'content'   =>  $content,
-            'ttl'       =>  $ttl
-        ];
+        if($type === 'SRV'){
+			//$content = "$weight, $priority, $target, $service, $proto, $port"
+			//Example: $content = "3, 5, examplewebpage.com, _web, _tcp, 8765"
+			$contentData = explode(", ", $content);
+			
+			$data = [
+				"type"	=>	$type,
+				"data"	=>	array(
+					"name"	=>	$name,
+					"weight" => $contentData[0],
+					"priority" => $contentData[1],
+					"target" => $contentData[2],
+					"service" => $contentData[3],
+					"proto" => $contentData[4],
+					"port" => $contentData[5],
+					"ttl"  => $ttl
+					)
+		];
+		}else{
+			$data = [
+				'type'      =>  $type,
+				'name'      =>  $name,
+				'content'   =>  $content,
+				'ttl'       =>  $ttl
+			];
+		}
         return $this->put('zones/'.$identifier.'/dns_records/'.$dns_record_id,$data);
     }
     /**
@@ -158,12 +178,32 @@ class cloudflare_api
          if (!in_array($type, self::$VALID_DNS_TYPES))
          return "incorrect dns type";
 
-        $data = [
-            'type'      =>  $type,
-            'name'      =>  $name,
-            'content'   =>  $content,
-            'ttl'       =>  $ttl
-        ];
+        if($type === 'SRV'){
+			//$content = "$weight, $priority, $target, $service, $proto, $port"
+			//Example: $content = "3, 5, examplewebpage.com, _web, _tcp, 8765"
+			$contentData = explode(", ", $content);
+			
+			$data = [
+				"type"	=>	$type,
+				"data"	=>	array(
+					"name"	=>	$name,
+					"weight" => $contentData[0],
+					"priority" => $contentData[1],
+					"target" => $contentData[2],
+					"service" => $contentData[3],
+					"proto" => $contentData[4],
+					"port" => $contentData[5],
+					"ttl"  => $ttl
+					)
+		];
+		}else{
+			$data = [
+				'type'      =>  $type,
+				'name'      =>  $name,
+				'content'   =>  $content,
+				'ttl'       =>  $ttl
+			];
+		}
         return $this->post('zones/'.$identifier.'/dns_records',$data);
     }
     /**
